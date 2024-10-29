@@ -71,8 +71,8 @@ public class AssociationModelDescription {
   }
 
   public IAssociationUIModel recreateInvertedAssociationModel() {
-    final IModelElement currentSource = Association.getSource(association);
-    final IModelElement currentTarget = Association.getTarget(association);
+    final IModelElement currentSource = Association.getFrom(association);
+    final IModelElement currentTarget = Association.getTo(association);
     final IModelElement originalSource = sourceDiagramElement.getModelElement();
     final IModelElement originalTarget = targetDiagramElement.getModelElement();
 

@@ -44,27 +44,27 @@ public class ViewManagerUtils {
   public static final String SCOPE_PLUGIN = "OntoUML";
 
   public static final String SIMPLE_LOGO = "simple_logo";
-  public static final String SIMPLE_LOGO_FILENAME = "ontouml-simple-logo.png";
+  public static final String SIMPLE_LOGO_FILENAME = "ontouml-icon-43x55.png";
   public static final String NAVIGATION_LOGO = "navigation";
-  public static final String NAVIGATION_LOGO_FILENAME = "navigation.png";
+  public static final String NAVIGATION_LOGO_FILENAME = "navigation-black-18x18.png";
   public static final String MORE_HORIZ_LOGO = "more_horiz";
-  public static final String MORE_HORIZ_LOGO_FILENAME = "more_horiz.png";
+  public static final String MORE_HORIZ_LOGO_FILENAME = "more_horiz-black-18x18.png";
   public static final String PACKAGE_LOGO = "package";
-  public static final String PACKAGE_LOGO_FILENAME = "package.png";
+  public static final String PACKAGE_LOGO_FILENAME = "package-black-18x18.png";
   public static final String CLASS_LOGO = "class";
-  public static final String CLASS_LOGO_FILENAME = "class.png";
+  public static final String CLASS_LOGO_FILENAME = "class-black-20x15.png";
   public static final String ASSOCIATION_LOGO = "association";
-  public static final String ASSOCIATION_LOGO_FILENAME = "association.png";
+  public static final String ASSOCIATION_LOGO_FILENAME = "association-black-20x15.png";
   public static final String GENERALIZATION_LOGO = "generalization";
-  public static final String GENERALIZATION_LOGO_FILENAME = "generalization.png";
+  public static final String GENERALIZATION_LOGO_FILENAME = "generalization-black-18x18.png";
   public static final String GENERALIZATION_SET_LOGO = "generalizationSet";
-  public static final String GENERALIZATION_SET_LOGO_FILENAME = "generalizationset.png";
+  public static final String GENERALIZATION_SET_LOGO_FILENAME = "generalizationset-black-18x18.png";
   public static final String DIAGRAM_LOGO = "diagram";
-  public static final String DIAGRAM_LOGO_FILENAME = "diagram.png";
+  public static final String DIAGRAM_LOGO_FILENAME = "diagram-black-18x18.png";
   public static final String DATATYPE_LOGO = "datatype";
-  public static final String DATATYPE_LOGO_FILENAME = "datatype.png";
+  public static final String DATATYPE_LOGO_FILENAME = "datatype-black-18x18.png";
   public static final String ATTRIBUTE_LOGO = "attribute";
-  public static final String ATTRIBUTE_LOGO_FILENAME = "attribute.png";
+  public static final String ATTRIBUTE_LOGO_FILENAME = "attribute-black-18x18.png";
 
   public static void simpleDialog(String message) {
     ApplicationManager.instance()
@@ -102,6 +102,12 @@ public class ViewManagerUtils {
     log(list);
   }
 
+  public static void clean() {
+    ApplicationManager.instance()
+        .getViewManager()
+        .removeMessagePaneComponent(OntoUMLPlugin.PLUGIN_ID);
+  }
+
   private static String timestamp() {
     return "[" + (new Timestamp(System.currentTimeMillis())) + "] ";
   }
@@ -113,47 +119,48 @@ public class ViewManagerUtils {
 
     switch (imageName) {
       case SIMPLE_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", "logo", SIMPLE_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "ontouml", SIMPLE_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case NAVIGATION_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", NAVIGATION_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", NAVIGATION_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case MORE_HORIZ_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", MORE_HORIZ_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", MORE_HORIZ_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case PACKAGE_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", PACKAGE_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", PACKAGE_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case CLASS_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", CLASS_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", CLASS_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case ASSOCIATION_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", ASSOCIATION_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", ASSOCIATION_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case GENERALIZATION_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", GENERALIZATION_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", GENERALIZATION_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case GENERALIZATION_SET_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", GENERALIZATION_SET_LOGO_FILENAME)
+        return Paths.get(
+                pluginDir.getAbsolutePath(), "icons", "misc", GENERALIZATION_SET_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case DIAGRAM_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", DIAGRAM_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", DIAGRAM_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case DATATYPE_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", DATATYPE_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", DATATYPE_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case ATTRIBUTE_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", ATTRIBUTE_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", ATTRIBUTE_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       default:
@@ -477,7 +484,7 @@ public class ViewManagerUtils {
     return map.get(selectedValue);
   }
 
-  public static boolean associationInvertionWarningDialog() {
+  public static boolean showInvertAssociationWarningDialog() {
     final Configurations config = Configurations.getInstance();
     final ProjectConfigurations projectConfig = config.getProjectConfigurations();
 
@@ -514,6 +521,29 @@ public class ViewManagerUtils {
       projectConfig.setIgnoreAssociationInversionWarning(true);
       config.save();
     }
+
+    return JOptionPane.YES_OPTION == selectedOption;
+  }
+
+  public static boolean showFixStereotypesWarningDialog() {
+    final ViewManager vm = ApplicationManager.instance().getViewManager();
+    final JLabel message =
+        new JLabel(
+            "<html>This action will affect all elements in your model<br>"
+                + "changing stereotypes and inverting associations<br>"
+                + "whenever inconsistencies are detected. Please<br>"
+                + "beware of these changes and save your project<br>"
+                + "before proceeding.<br><br>"
+                + "Do you wish to continue?</html>");
+
+    int selectedOption =
+        vm.showConfirmDialog(
+            vm.getRootFrame(),
+            message,
+            "Fix OntoUML Stereotypes Warning",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.INFORMATION_MESSAGE,
+            new ImageIcon(getFilePath(SIMPLE_LOGO)));
 
     return JOptionPane.YES_OPTION == selectedOption;
   }

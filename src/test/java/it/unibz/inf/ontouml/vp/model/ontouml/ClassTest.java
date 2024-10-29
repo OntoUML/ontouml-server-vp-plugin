@@ -35,7 +35,7 @@ public class ClassTest {
   @Test
   void shouldBePrimitiveDatatype() {
     Class primitive = Class.createDatatype("1", "string");
-    assertThat(primitive.isPrimitiveDatatype()).isTrue();
+    assertThat(primitive.isInstalledDatatype()).isTrue();
   }
 
   @Test
@@ -46,6 +46,6 @@ public class ClassTest {
     color.createAttribute("green", number);
     color.createAttribute("blue", number);
 
-    assertThat(color.isPrimitiveDatatype()).isFalse();
+    assertThat(color.isInstalledDatatype()).isFalse();
   }
 }

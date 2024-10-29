@@ -7,6 +7,7 @@ import com.google.gson.JsonParser;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import com.vp.plugin.model.*;
+import com.vp.plugin.model.factory.IModelElementFactory;
 import it.unibz.inf.ontouml.vp.utils.RestrictedTo;
 import it.unibz.inf.ontouml.vp.utils.Stereotype;
 import it.unibz.inf.ontouml.vp.utils.StereotypesManager;
@@ -205,6 +206,16 @@ public class Class implements ModelElement {
     setDescription(source.getDescription());
 
     loadTags(source);
+  }
+
+  public static Set<IAttribute> getAttributes(IClass _class) {
+    return _class.attributeCount() > 0
+        ? new HashSet<>(Arrays.asList(_class.toAttributeArray()))
+        : Collections.emptySet();
+  }
+
+  public static boolean isClass(IModelElement element) {
+    return element != null && IModelElementFactory.MODEL_TYPE_CLASS.equals(element.getModelType());
   }
 
   private void loadTags(IClass source) {
@@ -654,7 +665,7 @@ public class Class implements ModelElement {
     if (_class == null) return false;
 
     final String stereotype = ModelElement.getUniqueStereotypeName(_class);
-    return Stereotype.getOntoUMLClassStereotypeNames().contains(stereotype);
+    return Stereotype.getOntoumlClassStereotypeNames().contains(stereotype);
   }
 
   public static boolean isRestrictedToEditable(IClass _class) {
@@ -701,12 +712,12 @@ public class Class implements ModelElement {
     return Stereotype.isSortal(stereotype);
   }
 
-  public static void propagateRestrictionsToDescendants(IClass _class) {
-    Class.applyOnDescendants(
+  public static void propagateRestrictionsToChildren(IClass _class) {
+    Class.applyOnChildren(
         _class,
         descendent -> {
           if (!doesItInheritItsRestrictions(descendent)) {
-            return false;
+            return;
           }
 
           final Set<IClass> parents =
@@ -718,10 +729,7 @@ public class Class implements ModelElement {
 
           if (!parentsRestrictions.equals(descendentRestrictions)) {
             Class.setRestrictedTo(descendent, parentsRestrictions);
-            return true;
           }
-
-          return false;
         });
   }
 

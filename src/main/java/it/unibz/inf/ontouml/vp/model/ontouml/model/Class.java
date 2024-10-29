@@ -2,11 +2,14 @@ package it.unibz.inf.ontouml.vp.model.ontouml.model;
 
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.vp.plugin.model.IProject;
+import com.vp.plugin.model.factory.IModelElementFactory;
 import it.unibz.inf.ontouml.vp.model.ontouml.MultilingualText;
 import it.unibz.inf.ontouml.vp.model.ontouml.OntoumlElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.OntoumlUtils;
 import it.unibz.inf.ontouml.vp.model.ontouml.deserialization.ClassDeserializer;
 import it.unibz.inf.ontouml.vp.model.ontouml.serialization.ClassSerializer;
+import it.unibz.inf.ontouml.vp.utils.ApplicationManagerUtils;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -319,8 +322,18 @@ public final class Class extends Classifier<Class, ClassStereotype> {
     return hasStereotype(ClassStereotype.DATATYPE);
   }
 
-  public boolean isPrimitiveDatatype() {
-    return isDatatype() && !hasAttributes();
+  private boolean isProjectInstalledDatatype() {
+    IProject p = ApplicationManagerUtils.getCurrentProject();
+    String type = IModelElementFactory.MODEL_TYPE_DATA_TYPE;
+
+    // In VP, data types only exist in the project's root
+    return Optional.ofNullable(p.toModelElementArray(type)).stream()
+        .flatMap(Arrays::stream)
+        .anyMatch(installedDatatype -> installedDatatype.getId().equals(getId()));
+  }
+
+  public boolean isInstalledDatatype() {
+    return isDatatype() && isProjectInstalledDatatype();
   }
 
   public static Class createKind(String id, String name) {

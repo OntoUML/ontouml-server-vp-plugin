@@ -3,6 +3,8 @@ package it.unibz.inf.ontouml.vp.model.ontouml2vp;
 import com.vp.plugin.ApplicationManager;
 import com.vp.plugin.diagram.IClassDiagramUIModel;
 import com.vp.plugin.diagram.IDiagramElement;
+import com.vp.plugin.model.IAssociation;
+import com.vp.plugin.model.IAssociationEnd;
 import com.vp.plugin.model.IClass;
 import com.vp.plugin.model.IDataType;
 import com.vp.plugin.model.IModelElement;
@@ -82,5 +84,46 @@ public class LoaderUtils {
 
   static void loadName(ModelElement fromElement, IModelElement toElement) {
     fromElement.getFirstName().ifPresent(name -> toElement.setName(name));
+  }
+
+  static boolean isWholeEnd(IAssociationEnd associationEnd) {
+    return associationEnd.getAggregationKind() != null
+        && !IAssociationEnd.AGGREGATION_KIND_none.equals(associationEnd.getAggregationKind());
+  }
+
+  static boolean isNavigable(IAssociationEnd associationEnd) {
+    return IAssociationEnd.NAVIGABLE_NAV_NAVIGABLE == associationEnd.getNavigable();
+  }
+
+  static IAssociationEnd getSourceEndOnNavigability(IAssociation association) {
+    IAssociationEnd fromEnd = (IAssociationEnd) association.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) association.getToEnd();
+
+    if (isWholeEnd(toEnd)) {
+      return toEnd;
+    } else if (isWholeEnd(fromEnd)) {
+      return fromEnd;
+    } else if (isNavigable(toEnd)) {
+      return toEnd;
+    } else if (isNavigable(fromEnd)) {
+      return fromEnd;
+    } else {
+      return toEnd;
+    }
+  }
+
+  static IAssociationEnd getTargetEndOnNavigability(IAssociation association) {
+    IAssociationEnd fromEnd = (IAssociationEnd) association.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) association.getToEnd();
+
+    return getSourceEndOnNavigability(association) != toEnd ? toEnd : fromEnd;
+  }
+
+  static IClass getSourceOnNavigability(IAssociation association) {
+    return (IClass) getSourceEndOnNavigability(association).getTypeAsElement();
+  }
+
+  static IClass getTargetOnNavigability(IAssociation association) {
+    return (IClass) getTargetEndOnNavigability(association).getTypeAsElement();
   }
 }

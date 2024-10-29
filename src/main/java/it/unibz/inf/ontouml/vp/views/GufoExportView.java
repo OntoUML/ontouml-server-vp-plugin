@@ -199,7 +199,7 @@ public class GufoExportView extends JPanel {
     optionsPanelLeft.add(uriFormatBox, gbc_insidePanelLeft);
 
     JLabel inverseLabel = new JLabel("Create inverse properties:");
-    JLabel objectLabel = new JLabel("Minimize property creation:");
+    JLabel objectLabel = new JLabel("Create sub-properties:");
     JLabel analysisLabel = new JLabel("Run pre analysis:");
     JLabel prefixPackageLabel = new JLabel("Add prefix per package:");
 

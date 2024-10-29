@@ -25,20 +25,16 @@ public class StereotypesManager {
     final IModelElement[] installedStereotypes =
         project.toAllLevelModelElementArray(IModelElementFactory.MODEL_TYPE_STEREOTYPE);
     final Map<String, IStereotype> stereotypesMap = new HashMap<>();
-    final List<String> allStereotypeNames = Stereotype.getOntoUMLAssociationStereotypeNames();
-
-    allStereotypeNames.addAll(Stereotype.getOntoUMLAttributeStereotypeNames());
-    allStereotypeNames.addAll(Stereotype.getOntoUMLClassStereotypeNames());
 
     // Retrieves IStereotype objects for OntoUML elements
     for (IModelElement stereotype : installedStereotypes) {
-      if (allStereotypeNames.contains(stereotype.getName())) {
+      if (Stereotype.isOntoumlStereotype((IStereotype) stereotype)) {
         stereotypesMap.put(stereotype.getName(), (IStereotype) stereotype);
       }
     }
 
     // Creates missing IStereotype objects for OntoUML classes
-    for (String ontoUMLClassStereotype : Stereotype.getOntoUMLClassStereotypeNames()) {
+    for (String ontoUMLClassStereotype : Stereotype.getOntoumlClassStereotypeNames()) {
       if (stereotypesMap.get(ontoUMLClassStereotype) == null) {
         final IStereotype newStereotypeElement = IModelElementFactory.instance().createStereotype();
         newStereotypeElement.setName(ontoUMLClassStereotype);
@@ -47,7 +43,7 @@ public class StereotypesManager {
       }
     }
 
-    for (String ontoUMLAssociationStereotype : Stereotype.getOntoUMLAssociationStereotypeNames()) {
+    for (String ontoUMLAssociationStereotype : Stereotype.getOntoumlAssociationStereotypeNames()) {
       if (stereotypesMap.get(ontoUMLAssociationStereotype) == null) {
         final IStereotype newStereotypeElement = IModelElementFactory.instance().createStereotype();
         newStereotypeElement.setName(ontoUMLAssociationStereotype);
@@ -56,7 +52,7 @@ public class StereotypesManager {
       }
     }
 
-    for (String ontoUMLAttributeStereotype : Stereotype.getOntoUMLAttributeStereotypeNames()) {
+    for (String ontoUMLAttributeStereotype : Stereotype.getOntoumlAttributeStereotypeNames()) {
       if (stereotypesMap.get(ontoUMLAttributeStereotype) == null) {
         final IStereotype newStereotypeElement = IModelElementFactory.instance().createStereotype();
         newStereotypeElement.setName(ontoUMLAttributeStereotype);
@@ -66,7 +62,7 @@ public class StereotypesManager {
     }
 
     // Checks and adds missing tagged value definitions to IStereotype objects
-    final List<String> taggedStereotypeNames = Stereotype.getOntoUMLClassStereotypeNames();
+    final List<String> taggedStereotypeNames = Stereotype.getOntoumlClassStereotypeNames();
 
     for (String stereotypeName : taggedStereotypeNames) {
       final IStereotype stereotype = stereotypesMap.get(stereotypeName);
@@ -254,7 +250,7 @@ public class StereotypesManager {
             : null;
 
     // Escape in case the stereotype is missing or incorrect
-    if (stereotype == null || !Stereotype.getOntoUMLClassStereotypeNames().contains(stereotype))
+    if (stereotype == null || !Stereotype.getOntoumlClassStereotypeNames().contains(stereotype))
       return false;
 
     System.out.println("Reapplying " + stereotype + " to " + _class.getName());

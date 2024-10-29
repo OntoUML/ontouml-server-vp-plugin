@@ -33,8 +33,8 @@ public class AssociationEventManager extends ModelElementEventManager {
   }
 
   private void processStereotypeChange() {
-    //    checkSourcesDiagrams();
-    checkAssociationConsistency();
+    // checkSourcesDiagrams();
+    //    checkAssociationConsistency();
     // setDefaultAssociationProperties();
   }
 
@@ -56,26 +56,26 @@ public class AssociationEventManager extends ModelElementEventManager {
   private void checkMultiplicity() {
     if (isSourceEndMultiplicityUnspecified()) {
       final String mult = Association.getDefaultSourceMultiplicity(source);
-      Association.getSourceEnd(source).setMultiplicity(mult);
+      Association.getFromEnd(source).setMultiplicity(mult);
     }
     if (isTargetEndMultiplicityUnspecified()) {
       final String mult = Association.getDefaultTargetMultiplicity(source);
-      Association.getTargetEnd(source).setMultiplicity(mult);
+      Association.getToEnd(source).setMultiplicity(mult);
     }
   }
 
   private boolean isSourceEndMultiplicityUnspecified() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     return IAssociationEnd.MULTIPLICITY_UNSPECIFIED.equals(targetEnd.getMultiplicity());
   }
 
   private boolean isTargetEndMultiplicityUnspecified() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     return IAssociationEnd.MULTIPLICITY_UNSPECIFIED.equals(targetEnd.getMultiplicity());
   }
 
   private void checkAggregationKind() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
 
     if (shouldSetAggregationKind()) {
       final String defaultAggregationKind = Association.getDefaultAggregationKind(source);
@@ -86,7 +86,7 @@ public class AssociationEventManager extends ModelElementEventManager {
   }
 
   private boolean shouldSetAggregationKind() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     final String aggKind = targetEnd.getAggregationKind();
     final boolean isAggregationKindNone = IAssociationEnd.AGGREGATION_KIND_none.equals(aggKind);
 
@@ -96,7 +96,7 @@ public class AssociationEventManager extends ModelElementEventManager {
   }
 
   private boolean shouldRemoveAggregationKind() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     final String aggKind = targetEnd.getAggregationKind();
     final boolean isAggregationKindNone = IAssociationEnd.AGGREGATION_KIND_none.equals(aggKind);
 
@@ -106,38 +106,39 @@ public class AssociationEventManager extends ModelElementEventManager {
   }
 
   private void checkAssociationEndProperties() {
-    final IAssociationEnd sourceEnd = Association.getSourceEnd(source);
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd sourceEnd = Association.getFromEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     final boolean isSourceReadOnly = sourceEnd.isReadOnly();
     final boolean isTargetReadOnly = targetEnd.isReadOnly();
 
     if (Association.isSourceAlwaysReadOnly(source) && !isSourceReadOnly) {
-      Association.getSourceEnd(source).setReadOnly(true);
+      Association.getFromEnd(source).setReadOnly(true);
     }
     if (Association.isTargetAlwaysReadOnly(source) && !isTargetReadOnly) {
-      Association.getTargetEnd(source).setReadOnly(true);
+      Association.getToEnd(source).setReadOnly(true);
     }
   }
 
   private void checkAggregationPlacement() {
-    if (hasAggregationOnSource() && !hasAggregationOnTarget()) {
-      Association.invertAssociation(source, true);
-    }
+    throw new RuntimeException("Oops...");
+    //    if (hasAggregationOnSource() && !hasAggregationOnTarget()) {
+    //      Association.invertAssociation(source, true);
+    //    }
   }
 
   private boolean hasAggregationOnTarget() {
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
     return !IAssociationEnd.AGGREGATION_KIND_none.equals(targetEnd.getAggregationKind());
   }
 
   private boolean hasAggregationOnSource() {
-    final IAssociationEnd sourceEnd = Association.getSourceEnd(source);
+    final IAssociationEnd sourceEnd = Association.getFromEnd(source);
     return !IAssociationEnd.AGGREGATION_KIND_none.equals(sourceEnd.getAggregationKind());
   }
 
   private void checkNavigability() {
-    final IAssociationEnd sourceEnd = Association.getSourceEnd(source);
-    final IAssociationEnd targetEnd = Association.getTargetEnd(source);
+    final IAssociationEnd sourceEnd = Association.getFromEnd(source);
+    final IAssociationEnd targetEnd = Association.getToEnd(source);
 
     if (isSourceEndNavigable()) sourceEnd.setNavigable(IAssociationEnd.NAVIGABLE_UNSPECIFIED);
 
@@ -146,7 +147,7 @@ public class AssociationEventManager extends ModelElementEventManager {
   }
 
   private boolean isSourceEndNavigable() {
-    return IAssociationEnd.NAVIGABLE_NAVIGABLE == Association.getSourceEnd(source).getNavigable();
+    return IAssociationEnd.NAVIGABLE_NAVIGABLE == Association.getFromEnd(source).getNavigable();
   }
 
   private boolean isAssociationView(Object obj) {

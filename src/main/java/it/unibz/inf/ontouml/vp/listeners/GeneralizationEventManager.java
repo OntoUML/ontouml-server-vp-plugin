@@ -54,6 +54,6 @@ public class GeneralizationEventManager extends ModelElementEventManager {
 
     Class.getParents(_class).stream()
         .filter(Class::isOntoumlClass)
-        .forEach(Class::propagateRestrictionsToDescendants);
+        .forEach(Class::propagateRestrictionsToChildren);
   }
 }

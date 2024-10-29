@@ -36,10 +36,10 @@ public class IProjectLoader {
         .forEach(pkg -> IPackageLoader.importElement(pkg));
 
     fromProject.getAllClasses().stream()
-        .filter(c -> !c.isPrimitiveDatatype())
+        .filter(c -> !c.isInstalledDatatype())
         .forEach(c -> IClassLoader.importElement(c));
 
-    fromProject.getAllPrimitiveDatatypes().forEach(d -> IDataTypeLoader.importElement(d));
+    fromProject.getAllInstalledDatatypes().forEach(d -> IDataTypeLoader.importElement(d));
 
     // transform attributes
     fromProject.getAllClasses().stream()

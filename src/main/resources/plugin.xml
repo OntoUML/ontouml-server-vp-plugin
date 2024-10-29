@@ -1,6 +1,6 @@
 <plugin
   id="it.unibz.inf.ontouml.vp"
-  description="OntoUML Plugin Visual Paradigm v0.5.3"
+  description="OntoUML Plugin Visual Paradigm v0.5.4"
   provider="University of Bolzano"
   class="it.unibz.inf.ontouml.vp.OntoUMLPlugin">
 
@@ -20,7 +20,7 @@
         description="Tests if the model complies to OntoUML's syntactical constraints."
         style="normal"
         tooltip="Tests if the model complies to OntoUML's syntactical constraints."
-        icon="icons/toolbar/check-circle-orange.png"
+        icon="icons/toolbar/check-v2-orange-51x51.png"
         label="Check Model"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.ModelVerificationController"/>
@@ -32,7 +32,7 @@
         description="Tests if the model complies to OntoUML's syntactical constraints and filters the issues related to the open diagram."
         style="normal"
         tooltip="Tests if the model complies to OntoUML's syntactical constraints and filters the issues related to the open diagram."
-        icon="icons/toolbar/check-mark-orange.png"
+        icon="icons/toolbar/check-v1-orange-51x51.png"
         label="Check Diagram"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.ModelVerificationController"/>
@@ -44,7 +44,7 @@
         description="Generates diagrams from identified OntoUML modules present in the project."
         style="normal"
         tooltip="Generates diagrams from identified OntoUML modules present in the project."
-        icon="icons/toolbar/plus-sign-in-circle-orange.png"
+        icon="icons/toolbar/plus-orange-51x51.png"
         label="Generate Diagrams"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController
@@ -57,7 +57,7 @@
         description="Imports a project from a JSON file formatted according to the OntoUML JSON Schema."
         style="normal"
         tooltip="Imports a project from a JSON file formatted according to the OntoUML JSON Schema."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Import from JSON"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.JsonImportAndExportController"/>
@@ -69,7 +69,7 @@
         description="Imports a project from a JSON file formatted according to the OntoUML JSON Schema."
         style="normal"
         tooltip="Imports a project from a JSON file formatted according to the OntoUML JSON Schema."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Import from JSON"
         ribbonPath="Project/Import/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.JsonImportAndExportController"/>
@@ -83,7 +83,7 @@
         description="Exports the project as a JSON file formatted according to the OntoUML JSON Schema."
         style="normal"
         tooltip="Exports the project as a JSON file formatted according to the OntoUML JSON Schema."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Export to JSON"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.JsonImportAndExportController"/>
@@ -95,7 +95,7 @@
         description="Exports the project as a JSON file formatted according to the OntoUML JSON Schema."
         style="normal"
         tooltip="Exports the project as a JSON file formatted according to the OntoUML JSON Schema."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Export to JSON"
         ribbonPath="Project/Export/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.JsonImportAndExportController"/>
@@ -107,7 +107,7 @@
         description="Exports the OntoUML ontology to OWL gUFO."
         style="normal"
         tooltip="Exports the OntoUML ontology to OWL gUFO."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Export to gUFO"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.GufoExportController"/>
@@ -119,7 +119,7 @@
         description="Exports the OntoUML ontology to OWL gUFO."
         style="normal"
         tooltip="Exports the OntoUML ontology to OWL gUFO."
-        icon="icons/logo/ontouml-simple-logo-small.png"
+        icon="icons/ontouml/ontouml-icon-43x55.png"
         label="Export to gUFO"
         ribbonPath="Project/Export/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.GufoExportController"/>
@@ -128,12 +128,24 @@
       <separator id="project.export.ontouml" ribbonPath="Project/Export/#"/>
 
       <action
+        id="it.unibz.inf.ontouml.vp.actions.ModelSanitizeAction"
+        actionType="generalAction"
+        description="Automatically fixes issues in deprecated models, such as misspelled stereotypes and inconsistent association direction."
+        style="normal"
+        tooltip="Automatically fixes issues in deprecated models, such as misspelled stereotypes and inconsistent association direction."
+        icon="icons/toolbar/wand-orange-48x48.png"
+        label="Model Sanitize"
+        menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
+        <actionController class="it.unibz.inf.ontouml.vp.controllers.ModelSanitizeController"/>
+      </action>
+
+      <action
         id="it.unibz.inf.ontouml.vp.actions.UpdatePluginAction"
         actionType="generalAction"
         description="Opens the plugin update dialog."
         style="normal"
         tooltip="Opens the plugin update dialog."
-        icon="icons/toolbar/update-orange.png"
+        icon="icons/toolbar/update-orange-40x40.png"
         label="Update Plugin"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.UpdatePluginController"/>
@@ -145,7 +157,7 @@
         description="Opens the settings menu for the plugin."
         style="normal"
         tooltip="Opens the settings menu for the plugin."
-        icon="icons/toolbar/gear-orange.png"
+        icon="icons/toolbar/gear-orange-51x51.png"
         label="Settings"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.SettingsMenuController"/>
@@ -157,13 +169,12 @@
         description="Opens a bug report form on the browser."
         style="normal"
         tooltip="Opens a bug report form on the browser."
-        icon="icons/toolbar/sign-orange.png"
+        icon="icons/toolbar/sign-orange-30x30.png"
         label="Report Error"
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.ReportErrorController"/>
       </action>
 
-      <!--
       <action
         id="it.unibz.inf.ontouml.vp.actions.ReloadClassesAction"
         actionType="generalAction"
@@ -173,6 +184,7 @@
         menuPath="it.unibz.inf.ontouml.vp.actionset1.toolbar1/it.unibz.inf.ontouml.vp.actionset1.menu1/#">
         <actionController class="it.unibz.inf.ontouml.vp.controllers.ReloadClassesController"/>
       </action>
+      <!--
       -->
 
     </actionSet>
@@ -185,8 +197,8 @@
 
       <action id="it.unibz.inf.ontouml.vp.AssociationActions.invertAssociation"
         label="Invert Association" style="normal" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png">
-        <actionController class="it.unibz.inf.ontouml.vp.controllers.ModelActionController"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png">
+        <actionController class="it.unibz.inf.ontouml.vp.controllers.InvertAssociationController"/>
       </action>
 
     </contextSensitiveActionSet>
@@ -198,7 +210,7 @@
       <separator id="it.unibz.inf.ontouml.vp.ClassProperties.separator" menuPath="#"/>
 
       <menu id="classPropertiesMenu" label="Meta-Properties" mnemonic="P" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.ClassProperties.order" label="Set Order" style="normal"
         menuPath="classPropertiesMenu/#">
@@ -237,7 +249,7 @@
       <include type="Association"/>
 
       <menu id="associationPropertiesMenu" label="Meta-Properties" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <menu id="associationTargetPropertiesMenu" label="Target End"
         menuPath="associationPropertiesMenu/#"/>
@@ -299,7 +311,7 @@
       <separator id="it.unibz.inf.ontouml.vp.AttributesProperties.separator" menuPath="#"/>
 
       <menu id="attributesPropertiesMenu" label="Meta-Properties" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.AttributeProperties.isDerived" label="Is Derived"
         style="toggle" menuPath="attributesPropertiesMenu/#">
@@ -322,7 +334,7 @@
       <contextTypes all="false"/>
       <include type="Class"/>
       <menu id="ontoUMLMenu1" label="Suggested Stereotypes" mnemonic="O" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.addEnumerationStereotype" label="Enumeration"
         style="normal" menuPath="ontoUMLMenu1/#">
@@ -446,7 +458,7 @@
       <include type="Association"/>
 
       <menu id="ontoUMLMenu2" label="Suggested Stereotypes" mnemonic="O" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.addInstantiationStereotype" label="Instantiation"
         style="normal" menuPath="ontoUMLMenu2/#">
@@ -551,7 +563,7 @@
       <contextTypes all="false"/>
       <include type="Class"/>
       <menu id="ontoUMLMenu1.fixedMenu" label="OntoUML Stereotypes" mnemonic="O" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
 
       <action id="it.unibz.inf.ontouml.vp.addEnumerationStereotype.fixedMenu" label="Enumeration"
@@ -681,7 +693,7 @@
       <include type="Association"/>
 
       <menu id="ontoUMLMenu2.fixedMenu" label="OntoUML Stereotypes" mnemonic="O" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.addInstantiationStereotype.fixedMenu"
         label="Instantiation" style="normal" menuPath="ontoUMLMenu2.fixedMenu/#">
@@ -789,7 +801,7 @@
       <include type="Attribute"/>
 
       <menu id="ontoUMLMenu3.fixedMenu" label="OntoUML Stereotypes" mnemonic="O" menuPath="#"
-        icon="icons/logo/ontouml-simple-logo-small.png"/>
+        icon="icons/ontouml/ontouml-icon-17x22.png"/>
 
       <action id="it.unibz.inf.ontouml.vp.addEndStereotype.fixedMenu" label="End" style="normal"
         menuPath="ontoUMLMenu3.fixedMenu/#">

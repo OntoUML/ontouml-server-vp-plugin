@@ -1,15 +1,18 @@
 package it.unibz.inf.ontouml.vp.model.ontouml2vp;
 
+import static it.unibz.inf.ontouml.vp.model.ontouml2vp.LoaderUtils.isWholeEnd;
 import static it.unibz.inf.ontouml.vp.model.ontouml2vp.LoaderUtils.loadName;
 import static it.unibz.inf.ontouml.vp.model.ontouml2vp.LoaderUtils.logElementCreation;
 
 import com.vp.plugin.ApplicationManager;
 import com.vp.plugin.model.*;
 import com.vp.plugin.model.factory.IModelElementFactory;
+import it.unibz.inf.ontouml.vp.model.ontouml.Element;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Classifier;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Property;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Relation;
 import it.unibz.inf.ontouml.vp.utils.StereotypesManager;
+import java.util.Optional;
 
 public class IAssociationLoader {
 
@@ -36,12 +39,58 @@ public class IAssociationLoader {
         .getStereotype()
         .ifPresent(stereotype -> StereotypesManager.applyStereotype(toRelation, stereotype));
 
-    loadEndProperties(fromRelation.getSourceEnd(), (IAssociationEnd) toRelation.getFromEnd());
-    loadEndProperties(fromRelation.getTargetEnd(), (IAssociationEnd) toRelation.getToEnd());
+    Property relationSource = fromRelation.getSourceEnd();
+    Property relationTarget = fromRelation.getTargetEnd();
+    IAssociationEnd sourceEnd = getSourceEnd(relationSource, toRelation);
+    IAssociationEnd targetEnd = getTargetEnd(relationTarget, toRelation);
+
+    loadEndProperties(relationSource, sourceEnd);
+    loadEndProperties(relationTarget, targetEnd);
+    enforceNavigability(toRelation);
 
     ITaggedValueLoader.loadTaggedValues(fromRelation, toRelation);
 
     return toRelation;
+  }
+
+  private static IAssociationEnd getSourceEnd(Property sourceProperty, IAssociation relation) {
+    IAssociationEnd fromEnd = (IAssociationEnd) relation.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) relation.getToEnd();
+    String fromId =
+        Optional.ofNullable(relation.getFrom()).map(IModelElement::getId).orElse("noend");
+    String toId =
+        Optional.ofNullable(relation.getToEnd()).map(IModelElement::getId).orElse("noend");
+    String classId = sourceProperty.getPropertyType().map(Element::getId).orElse("noid");
+
+    if (fromId.equals(classId) && !toId.equals(classId)) return fromEnd;
+    if (toId.equals(classId) && !fromId.equals(classId)) return toEnd;
+    return fromEnd;
+  }
+
+  private static IAssociationEnd getTargetEnd(Property targetProperty, IAssociation relation) {
+    IAssociationEnd fromEnd = (IAssociationEnd) relation.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) relation.getToEnd();
+    String fromId =
+        Optional.ofNullable(relation.getFrom()).map(IModelElement::getId).orElse("noend");
+    String toId = Optional.ofNullable(relation.getTo()).map(IModelElement::getId).orElse("noend");
+    String classId = targetProperty.getPropertyType().map(Element::getId).orElse("noid");
+
+    if (toId.equals(classId) && !fromId.equals(classId)) return toEnd;
+    if (fromId.equals(classId) && !toId.equals(classId)) return fromEnd;
+    return toEnd;
+  }
+
+  private static void enforceNavigability(IAssociation association) {
+    IAssociationEnd fromEnd = (IAssociationEnd) association.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) association.getToEnd();
+
+    fromEnd.setNavigable(IAssociationEnd.NAVIGABLE_UNSPECIFIED);
+
+    if (!isWholeEnd(toEnd) && !isWholeEnd(fromEnd)) {
+      toEnd.setNavigable(IAssociationEnd.NAVIGABLE_NAVIGABLE);
+    } else {
+      toEnd.setNavigable(IAssociationEnd.NAVIGABLE_UNSPECIFIED);
+    }
   }
 
   private static void loadEndProperties(Property fromProperty, IAssociationEnd toProperty) {
@@ -71,18 +120,30 @@ public class IAssociationLoader {
     ITaggedValueLoader.loadTaggedValues(fromProperty, toProperty);
   }
 
-  private static void loadSource(Relation fromRelation, IAssociation toRelation) {
-    Classifier<?, ?> fromSource = fromRelation.getSource();
-    IModelElement toSource = vpProject.getModelElementById(fromSource.getId());
+  private static void loadSource(Relation relation, IAssociation association) {
+    Classifier<?, ?> relationSource = relation.getSource();
+    IModelElement associationSource = vpProject.getModelElementById(relationSource.getId());
 
-    if (toSource != null) toRelation.setFrom(toSource);
+    String associationSourceId =
+        Optional.ofNullable(associationSource.getId()).orElse("nosourceid");
+    String associationFromId =
+        Optional.ofNullable(association.getFrom()).map(IModelElement::getId).orElse("nofromid");
+
+    if (associationFromId.equals(associationSourceId)) association.setFrom(associationSource);
+    else association.setTo(associationSource);
   }
 
-  private static void loadTarget(Relation fromRelation, IAssociation toRelation) {
-    Classifier<?, ?> fromTarget = fromRelation.getTarget();
-    IModelElement toTarget = vpProject.getModelElementById(fromTarget.getId());
+  private static void loadTarget(Relation relation, IAssociation association) {
+    Classifier<?, ?> relationTarget = relation.getTarget();
+    IModelElement associationTarget = vpProject.getModelElementById(relationTarget.getId());
 
-    if (toTarget != null) toRelation.setTo(toTarget);
+    String associationTargetId =
+        Optional.ofNullable(associationTarget.getId()).orElse("notargetid");
+    String associationToId =
+        Optional.ofNullable(association.getTo()).map(IModelElement::getId).orElse("notoid");
+
+    if (associationToId.equals(associationTargetId)) association.setTo(associationTarget);
+    else association.setFrom(associationTarget);
   }
 
   private static IAssociation getOrCreateAssociation(Relation fromRelation) {

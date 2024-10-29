@@ -92,7 +92,7 @@ public class SmartColoringUtils {
    */
   private static Color getColor(IClass _class) {
     final String stereotype = ModelElement.getUniqueStereotypeName(_class);
-    final List<String> allStereotypes = Stereotype.getOntoUMLClassStereotypeNames();
+    final List<String> allStereotypes = Stereotype.getOntoumlClassStereotypeNames();
 
     if (!allStereotypes.contains(stereotype)) {
       return null;

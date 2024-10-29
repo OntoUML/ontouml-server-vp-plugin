@@ -1,11 +1,11 @@
 package it.unibz.inf.ontouml.vp.model.vp2ontouml;
 
 import com.vp.plugin.model.IAssociation;
-import com.vp.plugin.model.IAssociationEnd;
 import com.vp.plugin.model.IModelElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.ModelElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Property;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Relation;
+import it.unibz.inf.ontouml.vp.model.uml.Association;
 import java.util.List;
 
 public class IAssociationTransformer {
@@ -25,24 +25,16 @@ public class IAssociationTransformer {
     boolean isAbstract = source.isAbstract();
     target.setAbstract(isAbstract);
 
-    Property sourceEnd = IPropertyTransformer.transform(getSourceEnd(source));
-    Property targetEnd = IPropertyTransformer.transform(getTargetEnd(source));
+    Property sourceEnd = IPropertyTransformer.transform(Association.getSourceEnd(source));
+    Property targetEnd = IPropertyTransformer.transform(Association.getTargetEnd(source));
     target.setProperties(List.of(sourceEnd, targetEnd));
 
     return target;
   }
 
-  private static IAssociationEnd getSourceEnd(IAssociation association) {
-    return (IAssociationEnd) association.getFromEnd();
-  }
-
-  private static IAssociationEnd getTargetEnd(IAssociation association) {
-    return (IAssociationEnd) association.getToEnd();
-  }
-
   private static boolean isDerived(IAssociation association) {
     return association.isDerived()
-        || getSourceEnd(association).isDerived()
-        || getTargetEnd(association).isDerived();
+        || Association.getSourceEnd(association).isDerived()
+        || Association.getTargetEnd(association).isDerived();
   }
 }

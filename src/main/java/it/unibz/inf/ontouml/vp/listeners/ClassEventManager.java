@@ -106,18 +106,18 @@ public class ClassEventManager extends ModelElementEventManager {
 
     if (Class.doesItHaveFixedRestrictions(source) && hasEventChangedValues()) {
       enforceFixedRestrictions();
-      Class.propagateRestrictionsToDescendants(source);
+      Class.propagateRestrictionsToChildren(source);
       return;
     }
 
     if (Class.doesItInheritItsRestrictions(source) && hasEventChangedValues()) {
       inheritRestrictedTo(source);
-      Class.propagateRestrictionsToDescendants(source);
+      Class.propagateRestrictionsToChildren(source);
       return;
     }
 
     if (Class.canItHaveMultipleRestrictions(source) && hasEventChangedValues()) {
-      Class.propagateRestrictionsToDescendants(source);
+      Class.propagateRestrictionsToChildren(source);
       return;
     }
 

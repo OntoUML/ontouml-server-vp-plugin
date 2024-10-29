@@ -8,6 +8,7 @@ import com.vp.plugin.DiagramManager;
 import com.vp.plugin.diagram.IClassDiagramUIModel;
 import com.vp.plugin.diagram.IDiagramElement;
 import com.vp.plugin.model.IAssociation;
+import com.vp.plugin.model.IClass;
 import com.vp.plugin.model.IModelElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.view.RelationView;
 import java.awt.*;
@@ -20,7 +21,6 @@ public class IAssociationUIModelLoader {
     IModelElement toModelElement = getIModelElement(fromView);
 
     if (!(toModelElement instanceof IAssociation)) {
-      //        && !(toModelElement instanceof IAssociationClass)) {
       System.out.println(
           LoaderUtils.getIncompatibleMessage(fromView, toModelElement, IAssociation.class));
       return;
@@ -36,5 +36,12 @@ public class IAssociationUIModelLoader {
 
     fromView.setId(toView.getId());
     toView.resetCaption();
+  }
+
+  public boolean isDirectionInverted(
+      IClass source, IClass target, IDiagramElement sourceShape, IDiagramElement targetShape) {
+    return !source.getId().equals(target.getId())
+        && source.getId().equals(targetShape.getModelElement().getId())
+        && target.getId().equals(sourceShape.getModelElement().getId());
   }
 }

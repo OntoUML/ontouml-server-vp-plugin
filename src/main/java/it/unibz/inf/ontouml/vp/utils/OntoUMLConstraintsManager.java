@@ -83,8 +83,10 @@ public class OntoUMLConstraintsManager {
   }
 
   public static boolean isStereotypeAllowed(IAssociation association, String stereotype) {
-    final List<String> sourceRestrictions = Association.getSourceRestrictions(association);
-    final List<String> targetRestrictions = Association.getTargetRestrictions(association);
+    IClass source = Association.getSource(association);
+    IClass target = Association.getTarget(association);
+    final List<String> sourceRestrictions = Class.getRestrictedToList(source);
+    final List<String> targetRestrictions = Class.getRestrictedToList(target);
     boolean isAllowed = false;
 
     for (var sourceRestriction : sourceRestrictions) {
@@ -104,8 +106,10 @@ public class OntoUMLConstraintsManager {
   }
 
   public static boolean isStereotypeAllowedIfInverted(IAssociation association, String stereotype) {
-    final List<String> sourceRestrictions = Association.getSourceRestrictions(association);
-    final List<String> targetRestrictions = Association.getTargetRestrictions(association);
+    IClass source = Association.getSource(association);
+    IClass target = Association.getTarget(association);
+    final List<String> sourceRestrictions = Class.getRestrictedToList(source);
+    final List<String> targetRestrictions = Class.getRestrictedToList(target);
     boolean isAllowed = false;
 
     for (var sourceRestriction : sourceRestrictions) {

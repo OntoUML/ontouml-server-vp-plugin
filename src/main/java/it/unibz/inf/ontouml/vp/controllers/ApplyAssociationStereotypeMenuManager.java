@@ -3,6 +3,7 @@ package it.unibz.inf.ontouml.vp.controllers;
 import com.vp.plugin.action.VPAction;
 import com.vp.plugin.action.VPContext;
 import com.vp.plugin.model.IAssociation;
+import com.vp.plugin.model.IAssociationEnd;
 import com.vp.plugin.model.IModelElement;
 import it.unibz.inf.ontouml.vp.model.uml.Association;
 import it.unibz.inf.ontouml.vp.utils.OntoUMLConstraintsManager;
@@ -49,7 +50,7 @@ public class ApplyAssociationStereotypeMenuManager extends ApplyStereotypeMenuMa
     boolean shouldProceed = true;
 
     if (shouldWarnAboutInvertingAssociations())
-      shouldProceed = ViewManagerUtils.associationInvertionWarningDialog();
+      shouldProceed = ViewManagerUtils.showInvertAssociationWarningDialog();
 
     if (!shouldProceed) return;
 
@@ -58,11 +59,19 @@ public class ApplyAssociationStereotypeMenuManager extends ApplyStereotypeMenuMa
         .filter(Association::holdsBetweenClasses)
         .forEach(
             association -> {
-              if (doesRequireInverting(association))
-                Association.invertAssociation(association, true);
+              String stereotype = associationStereotypeId.getStereotype();
+              StereotypesManager.applyStereotype(association, stereotype);
+              IAssociationEnd sourceEnd =
+                  !doesRequireInverting(association)
+                      ? Association.getSourceEnd(association)
+                      : Association.getTargetEnd(association);
+              IAssociationEnd targetEnd =
+                  !doesRequireInverting(association)
+                      ? Association.getTargetEnd(association)
+                      : Association.getSourceEnd(association);
 
-              StereotypesManager.applyStereotype(
-                  association, associationStereotypeId.getStereotype());
+              Association.setSourceEndProperties(association, sourceEnd);
+              Association.setTargetEndProperties(association, targetEnd);
             });
   }
 

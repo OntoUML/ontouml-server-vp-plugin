@@ -12,7 +12,7 @@ import it.unibz.inf.ontouml.vp.utils.ActionIdManager;
 import it.unibz.inf.ontouml.vp.utils.ViewManagerUtils;
 import java.awt.event.ActionEvent;
 
-public class ModelActionController implements VPContextActionController {
+public class InvertAssociationController implements VPContextActionController {
 
   @Override
   public void performAction(VPAction action, VPContext context, ActionEvent event) {
@@ -37,7 +37,7 @@ public class ModelActionController implements VPContextActionController {
       case ActionIdManager.ASSOCIATION_ACTION_INVERT_ASSOCIATION:
         ModelElement.forEachSelectedElement(
             clickedAssociation,
-            selectedAssociation -> Association.invertAssociation(selectedAssociation, false));
+            selectedAssociation -> Association.invertAssociation(selectedAssociation));
         break;
     }
   }

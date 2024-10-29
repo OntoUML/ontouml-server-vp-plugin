@@ -1,6 +1,8 @@
 package it.unibz.inf.ontouml.vp.model.vp2ontouml;
 
+import com.vp.plugin.model.IAssociation;
 import com.vp.plugin.model.IAssociationClass;
+import com.vp.plugin.model.IClass;
 import com.vp.plugin.model.IModelElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.OntoumlElement;
 import it.unibz.inf.ontouml.vp.model.ontouml.model.Classifier;
@@ -13,10 +15,15 @@ public class IAssociationClassTransformer {
 
     IAssociationClass source = (IAssociationClass) sourceElement;
 
-    Classifier<?, ?> fromClassifier = createClassifierStub(source.getFrom());
-    Classifier<?, ?> toClassifier = createClassifierStub(source.getTo());
+    IModelElement from = source.getFrom();
+    IModelElement to = source.getTo();
+    IModelElement derivingAssociation = from instanceof IAssociation ? from : to;
+    IModelElement derivedClass = to instanceof IClass ? to : from;
+    Classifier<?, ?> derivingAssociationStub = createClassifierStub(derivingAssociation);
+    Classifier<?, ?> derivedClassStub = createClassifierStub(derivedClass);
 
-    Relation target = Relation.createDerivation(null, null, fromClassifier, toClassifier);
+    Relation target =
+        Relation.createDerivation(null, null, derivingAssociationStub, derivedClassStub);
 
     IModelElementTransformer.transform(source, target);
     ITaggedValueTransformer.transform(source, target);

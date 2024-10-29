@@ -16,7 +16,7 @@ import it.unibz.inf.ontouml.vp.listeners.ProjectListener;
  */
 public class OntoUMLPlugin implements VPPlugin {
 
-  public static final String PLUGIN_VERSION_RELEASE = "0.5.3";
+  public static final String PLUGIN_VERSION_RELEASE = "0.5.4";
   public static final String PLUGIN_ID = "it.unibz.inf.ontouml.vp";
   public static final String PLUGIN_NAME = "OntoUML Plugin";
   public static final String PLUGIN_REPO = "https://github.com/OntoUML/ontouml-vp-plugin/";

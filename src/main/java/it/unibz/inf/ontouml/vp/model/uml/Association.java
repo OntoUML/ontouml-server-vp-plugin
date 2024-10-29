@@ -222,66 +222,57 @@ public class Association implements ModelElement {
     this.isDerived = isDerived;
   }
 
-  public static IClass getSource(IAssociation association) {
+  public static IClass getFrom(IAssociation association) {
     return (IClass) association.getFrom();
   }
 
-  public static IClass getTarget(IAssociation association) {
+  public static IClass getTo(IAssociation association) {
     return (IClass) association.getTo();
   }
 
-  public static void setSource(IAssociation association, IClass newSource) {
-    association.setFrom(newSource);
+  public static void setFrom(IAssociation association, IClass iClass) {
+    association.setFrom(iClass);
   }
 
-  public static void setTarget(IAssociation association, IClass newTarget) {
-    association.setTo(newTarget);
+  public static void setTo(IAssociation association, IClass iClass) {
+    association.setTo(iClass);
   }
 
-  public static IAssociationEnd getSourceEnd(IAssociation association) {
+  public static IAssociationEnd getFromEnd(IAssociation association) {
     return (IAssociationEnd) association.getFromEnd();
   }
 
-  public static IAssociationEnd getTargetEnd(IAssociation association) {
+  public static IAssociationEnd getToEnd(IAssociation association) {
     return (IAssociationEnd) association.getToEnd();
   }
 
-  public static List<String> getSourceRestrictions(IAssociation association) {
-    return Class.getRestrictedToList(getSource(association));
+  public static List<String> getFromRestrictions(IAssociation association) {
+    return Class.getRestrictedToList(getFrom(association));
   }
 
-  public static List<String> getTargetRestrictions(IAssociation association) {
-    return Class.getRestrictedToList(getTarget(association));
+  public static List<String> getToRestrictions(IAssociation association) {
+    return Class.getRestrictedToList(getTo(association));
   }
 
-  public static void invertAssociation(
-      IAssociation association, boolean keepAllAssociationEndPropertiesInPlace) {
-    final IClass originalSource = getSource(association);
-    final IClass originalTarget = getTarget(association);
-    final IAssociationEnd originalSourceEnd = getSourceEnd(association);
-    final IAssociationEnd originalTargetEnd = getTargetEnd(association);
-    final PropertyDescription sourceEndDescription = new PropertyDescription(originalSourceEnd);
-    final PropertyDescription targetEndDescription = new PropertyDescription(originalTargetEnd);
-    final List<AssociationModelDescription> originalAssociationsDescriptions =
-        retrieveAndDeleteAssociationModels(association);
+  public static void invertAssociation(IAssociation association) {
+    IAssociationEnd originalSourceEnd = getSourceEnd(association);
+    IAssociationEnd originalTargetEnd = getTargetEnd(association);
 
-    setSource(association, originalTarget);
-    setTarget(association, originalSource);
+    String originalSourceAgg = originalSourceEnd.getAggregationKind();
+    String originalSourceMult = originalSourceEnd.getMultiplicity();
+    int originalSourceNav = originalSourceEnd.getNavigable();
 
-    if (keepAllAssociationEndPropertiesInPlace) {
-      sourceEndDescription.copyTo(originalTargetEnd);
-      targetEndDescription.copyTo(originalSourceEnd);
-    } else {
-      sourceEndDescription.partialCopyTo(originalTargetEnd);
-      targetEndDescription.partialCopyTo(originalSourceEnd);
-    }
+    String originalTargetAgg = originalTargetEnd.getAggregationKind();
+    String originalTargetMult = originalTargetEnd.getMultiplicity();
+    int originalTargetNav = originalTargetEnd.getNavigable();
 
-    setNavigability(association);
+    originalSourceEnd.setAggregationKind(originalTargetAgg);
+    originalSourceEnd.setMultiplicity(originalTargetMult);
+    originalSourceEnd.setNavigable(originalTargetNav);
 
-    for (AssociationModelDescription originalAssociationsDescription :
-        originalAssociationsDescriptions) {
-      originalAssociationsDescription.recreateInvertedAssociationModel();
-    }
+    originalTargetEnd.setAggregationKind(originalSourceAgg);
+    originalTargetEnd.setMultiplicity(originalSourceMult);
+    originalTargetEnd.setNavigable(originalSourceNav);
   }
 
   private static List<AssociationModelDescription> retrieveAndDeleteAssociationModels(
@@ -306,8 +297,8 @@ public class Association implements ModelElement {
       return;
     }
 
-    final IAssociationEnd sourceEnd = getSourceEnd(association);
-    final IAssociationEnd targetEnd = getTargetEnd(association);
+    final IAssociationEnd sourceEnd = getFromEnd(association);
+    final IAssociationEnd targetEnd = getToEnd(association);
     final String targetAgg = targetEnd.getAggregationKind().toLowerCase();
 
     sourceEnd.setNavigable(IAssociationEnd.NAVIGABLE_NAV_UNSPECIFIED);
@@ -321,8 +312,8 @@ public class Association implements ModelElement {
 
   public static void setDefaultAggregationKind(IAssociation association, boolean forceOverride) {
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
-    final IAssociationEnd sourceEnd = getSourceEnd(association);
-    final IAssociationEnd targetEnd = getTargetEnd(association);
+    final IAssociationEnd sourceEnd = getFromEnd(association);
+    final IAssociationEnd targetEnd = getToEnd(association);
     String aggregationKind = IAssociationEnd.AGGREGATION_KIND_none;
 
     switch (stereotype) {
@@ -364,10 +355,10 @@ public class Association implements ModelElement {
   }
 
   public static void setDefaultMultiplicity(IAssociation association, boolean forceOverride) {
-    final IClass source = getSource(association);
-    final IClass target = getTarget(association);
-    final IAssociationEnd sourceEnd = getSourceEnd(association);
-    final IAssociationEnd targetEnd = getTargetEnd(association);
+    final IClass source = getFrom(association);
+    final IClass target = getTo(association);
+    final IAssociationEnd sourceEnd = getFromEnd(association);
+    final IAssociationEnd targetEnd = getToEnd(association);
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
     final String sourceStereotype = ModelElement.getUniqueStereotypeName(source);
     final String targetStereotype = ModelElement.getUniqueStereotypeName(target);
@@ -528,7 +519,7 @@ public class Association implements ModelElement {
   public static String getDefaultSourceMultiplicity(IAssociation association) {
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
     final String targetStereotype =
-        ModelElement.getUniqueStereotypeName(Association.getTarget(association));
+        ModelElement.getUniqueStereotypeName(Association.getTo(association));
 
     switch (stereotype != null ? stereotype : "") {
       case Stereotype.CHARACTERIZATION:
@@ -564,7 +555,7 @@ public class Association implements ModelElement {
   public static String getDefaultTargetMultiplicity(IAssociation association) {
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
     final String sourceStereotype =
-        ModelElement.getUniqueStereotypeName(Association.getSource(association));
+        ModelElement.getUniqueStereotypeName(Association.getFrom(association));
 
     switch (stereotype != null ? stereotype : "") {
       case Stereotype.TRIGGERS:
@@ -603,43 +594,33 @@ public class Association implements ModelElement {
   }
 
   public static boolean isOntoumlAssociation(IAssociation association) {
-    boolean hasSource = getSource(association) != null;
-    boolean hasTarget = getTarget(association) != null;
+    boolean hasSource = getFrom(association) != null;
+    boolean hasTarget = getTo(association) != null;
     boolean hasOntoumlStereotype = hasOntoumlStereotype(association);
-    boolean hasOntoumlSource = hasSource && Class.isOntoumlClass(getSource(association));
-    boolean hasOntoumlTarget = hasTarget && Class.isOntoumlClass(getTarget(association));
+    boolean hasOntoumlSource = hasSource && Class.isOntoumlClass(getFrom(association));
+    boolean hasOntoumlTarget = hasTarget && Class.isOntoumlClass(getTo(association));
 
     return hasSource && hasTarget && (hasOntoumlStereotype || hasOntoumlSource || hasOntoumlTarget);
   }
 
   public static boolean hasOntoumlStereotype(IAssociation association) {
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
-    return Stereotype.getOntoUMLAssociationStereotypeNames().contains(stereotype);
+    return stereotype != null
+        && Stereotype.getOntoumlAssociationStereotypeNames().contains(stereotype);
   }
 
   public static boolean hasMereologyStereotype(IAssociation association) {
     final String stereotype = ModelElement.getUniqueStereotypeName(association);
-    return Stereotype.getOntoUMLMereologyStereotypeNames().contains(stereotype);
+    return stereotype != null
+        && Stereotype.getOntoUMLMereologyStereotypeNames().contains(stereotype);
   }
 
-  public static boolean hasAggregationSetOnSource(IAssociation association) {
-    var aggregationKind = getSourceEnd(association).getAggregationKind();
-
-    // TODO: remove direct comparison to "Shared" once IAssociationEnd.AGGREGATION_KIND_shared is
-    // fixed by VP
-    return IAssociationEnd.AGGREGATION_KIND_shared.equals(aggregationKind)
-        || IAssociationEnd.AGGREGATION_KIND_composite.equals(aggregationKind)
-        || "Shared".equals(aggregationKind);
+  public static boolean hasAggregationOnFromEnd(IAssociation association) {
+    return Property.isWholeEnd(getFromEnd(association));
   }
 
-  public static boolean hasAggregationSetOnTarget(IAssociation association) {
-    var aggregationKind = getTargetEnd(association).getAggregationKind();
-
-    // TODO: remove direct comparison to "Shared" once IAssociationEnd.AGGREGATION_KIND_shared is
-    // fixed by VP
-    return IAssociationEnd.AGGREGATION_KIND_shared.equals(aggregationKind)
-        || IAssociationEnd.AGGREGATION_KIND_composite.equals(aggregationKind)
-        || "Shared".equals(aggregationKind);
+  public static boolean hasAggregationOnToEnd(IAssociation association) {
+    return Property.isWholeEnd(getToEnd(association));
   }
 
   public static boolean isSourceAlwaysReadOnly(IAssociation association) {
@@ -685,5 +666,92 @@ public class Association implements ModelElement {
     if (sharedDefault.contains(stereotype)) return IAssociationEnd.AGGREGATION_KIND_shared;
     if (compositeDefault.contains(stereotype)) return IAssociationEnd.AGGREGATION_KIND_composite;
     return IAssociationEnd.AGGREGATION_KIND_none;
+  }
+
+  public static boolean hasNavigableFromEnd(IAssociation association) {
+    return Property.isNavigableEnd(getFromEnd(association));
+  }
+
+  public static boolean hasNavigableToEnd(IAssociation association) {
+    return Property.isNavigableEnd(getToEnd(association));
+  }
+
+  public static IAssociationEnd getTargetEnd(IAssociation association) {
+    IAssociationEnd fromEnd = (IAssociationEnd) association.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) association.getToEnd();
+
+    if (hasAggregationOnToEnd(association)) {
+      return toEnd;
+    } else if (hasAggregationOnFromEnd(association)) {
+      return fromEnd;
+    } else if (hasNavigableToEnd(association)) {
+      return toEnd;
+    } else if (hasNavigableFromEnd(association)) {
+      return fromEnd;
+    } else {
+      return toEnd;
+    }
+  }
+
+  public static IAssociationEnd getSourceEnd(IAssociation association) {
+    IAssociationEnd fromEnd = (IAssociationEnd) association.getFromEnd();
+    IAssociationEnd toEnd = (IAssociationEnd) association.getToEnd();
+
+    return !fromEnd.equals(getTargetEnd(association)) ? fromEnd : toEnd;
+  }
+
+  public static IClass getSource(IAssociation association) {
+    return (IClass) getSourceEnd(association).getTypeAsElement();
+  }
+
+  public static IClass getTarget(IAssociation association) {
+    return (IClass) getTargetEnd(association).getTypeAsElement();
+  }
+
+  public static boolean doesFromAndSourceMatch(IAssociation association) {
+    return association.getFromEnd() != null
+        && association.getFromEnd().equals(getSourceEnd(association));
+  }
+
+  public static void setSourceEndProperties(IAssociation association, IAssociationEnd sourceEnd) {
+    String sourceMultiplicity = sourceEnd.getMultiplicity();
+
+    sourceEnd.setNavigable(IAssociationEnd.NAVIGABLE_UNSPECIFIED);
+    sourceEnd.setAggregationKind(IAssociationEnd.AGGREGATION_KIND_none);
+
+    if (sourceMultiplicity == null
+        || IAssociationEnd.MULTIPLICITY_UNSPECIFIED.equals(sourceMultiplicity)) {
+      String defaultSourceMultiplicity = Association.getDefaultSourceMultiplicity(association);
+      sourceEnd.setMultiplicity(defaultSourceMultiplicity);
+    }
+
+    if (Association.isSourceAlwaysReadOnly(association)) {
+      sourceEnd.setReadOnly(true);
+    }
+  }
+
+  public static void setTargetEndProperties(IAssociation association, IAssociationEnd targetEnd) {
+    if (Association.hasMereologyStereotype(association)) {
+      if (!Property.isWholeEnd(targetEnd)) {
+        String defaultAggKind = Association.getDefaultAggregationKind(association);
+        targetEnd.setAggregationKind(defaultAggKind);
+      }
+      targetEnd.setNavigable(IAssociationEnd.NAVIGABLE_UNSPECIFIED);
+    } else {
+      targetEnd.setAggregationKind(IAssociationEnd.AGGREGATION_KIND_none);
+      targetEnd.setNavigable(IAssociationEnd.NAVIGABLE_NAVIGABLE);
+    }
+
+    String targetMultiplicity = targetEnd.getMultiplicity();
+
+    if (targetMultiplicity == null
+        || IAssociationEnd.MULTIPLICITY_UNSPECIFIED.equals(targetMultiplicity)) {
+      String defaultTargetMultiplicity = Association.getDefaultTargetMultiplicity(association);
+      targetEnd.setMultiplicity(defaultTargetMultiplicity);
+    }
+
+    if (Association.isTargetAlwaysReadOnly(association)) {
+      targetEnd.setReadOnly(true);
+    }
   }
 }

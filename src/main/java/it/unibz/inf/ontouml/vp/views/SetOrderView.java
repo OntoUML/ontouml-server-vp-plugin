@@ -17,9 +17,9 @@ public class SetOrderView implements IDialogHandler {
   private static final String ADD_LOGO = "add";
   private static final String ASTERISK_LOGO = "asterisk";
   private static final String SUBTRACT_LOGO = "subtract";
-  private static final String ADD_LOGO_FILENAME = "add.png";
-  private static final String ASTERISK_LOGO_FILENAME = "asterisk.png";
-  private static final String SUBTRACT_LOGO_FILENAME = "subtract.png";
+  private static final String ADD_LOGO_FILENAME = "add-black-36x36.png";
+  private static final String ASTERISK_LOGO_FILENAME = "asterisk-black-24x24.png";
+  private static final String SUBTRACT_LOGO_FILENAME = "subtract-black-36x36.png";
 
   private IDialog _dialog;
   private boolean cancelledExit = true;
@@ -157,15 +157,15 @@ public class SetOrderView implements IDialogHandler {
 
     switch (imageName) {
       case ADD_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", ADD_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", ADD_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case ASTERISK_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", ASTERISK_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", ASTERISK_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       case SUBTRACT_LOGO:
-        return Paths.get(pluginDir.getAbsolutePath(), "icons", SUBTRACT_LOGO_FILENAME)
+        return Paths.get(pluginDir.getAbsolutePath(), "icons", "misc", SUBTRACT_LOGO_FILENAME)
             .toFile()
             .getAbsolutePath();
       default:

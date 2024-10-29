@@ -19,6 +19,7 @@ public class IAssociationClassUIModelLoader {
   public static void load(IClassDiagramUIModel toDiagram, RelationView fromView) {
     IModelElement toModelElement = getIModelElement(fromView);
 
+    // TODO: review this bit: how does it find the derivation if it was created anew
     if (!(toModelElement instanceof IAssociationClass)) {
       System.out.println(
           LoaderUtils.getIncompatibleMessage(fromView, toModelElement, IAssociationClass.class));

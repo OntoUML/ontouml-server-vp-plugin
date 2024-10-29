@@ -1,5 +1,7 @@
 package it.unibz.inf.ontouml.vp.utils;
 
+import com.vp.plugin.model.IStereotype;
+import com.vp.plugin.model.factory.IModelElementFactory;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -55,7 +57,7 @@ public class Stereotype {
   public static final String BEGIN = "begin";
   public static final String END = "end";
 
-  public static List<String> getOntoUMLClassStereotypeNames() {
+  public static List<String> getOntoumlClassStereotypeNames() {
     return new ArrayList<>(
         Arrays.asList(
             TYPE,
@@ -81,7 +83,7 @@ public class Stereotype {
             PHASE));
   }
 
-  public static List<String> getOntoUMLAssociationStereotypeNames() {
+  public static List<String> getOntoumlAssociationStereotypeNames() {
     return new ArrayList<>(
         Arrays.asList(
             INSTANTIATION,
@@ -104,16 +106,16 @@ public class Stereotype {
             SUB_QUANTITY_OF));
   }
 
-  public static List<String> getOntoUMLAttributeStereotypeNames() {
+  public static List<String> getOntoumlAttributeStereotypeNames() {
     return new ArrayList<>(Arrays.asList(BEGIN, END));
   }
 
   public static List<String> getOntoUMLStereotypeNames() {
     final List<String> str_names = new ArrayList<>();
 
-    str_names.addAll(getOntoUMLAssociationStereotypeNames());
-    str_names.addAll(getOntoUMLAttributeStereotypeNames());
-    str_names.addAll(getOntoUMLClassStereotypeNames());
+    str_names.addAll(getOntoumlAssociationStereotypeNames());
+    str_names.addAll(getOntoumlAttributeStereotypeNames());
+    str_names.addAll(getOntoumlClassStereotypeNames());
 
     return str_names;
   }
@@ -148,5 +150,29 @@ public class Stereotype {
 
   public static boolean isSortal(String stereotype) {
     return isUltimateSortal(stereotype) || isBaseSortal(stereotype);
+  }
+
+  public static boolean isOntoumlStereotype(IStereotype stereotype) {
+    return isOntoumlClassStereotype(stereotype)
+        || isOntoumlAssociationStereotype(stereotype)
+        || isOntoumlAttributeStereotype(stereotype);
+  }
+
+  private static boolean isOntoumlAttributeStereotype(IStereotype stereotype) {
+    return stereotype != null
+        && IModelElementFactory.MODEL_TYPE_ATTRIBUTE.equals(stereotype.getBaseType())
+        && getOntoumlAttributeStereotypeNames().contains(stereotype.getName());
+  }
+
+  private static boolean isOntoumlAssociationStereotype(IStereotype stereotype) {
+    return stereotype != null
+        && IModelElementFactory.MODEL_TYPE_ASSOCIATION.equals(stereotype.getBaseType())
+        && getOntoumlAssociationStereotypeNames().contains(stereotype.getName());
+  }
+
+  private static boolean isOntoumlClassStereotype(IStereotype stereotype) {
+    return stereotype != null
+        && IModelElementFactory.MODEL_TYPE_CLASS.equals(stereotype.getBaseType())
+        && getOntoumlClassStereotypeNames().contains(stereotype.getName());
   }
 }

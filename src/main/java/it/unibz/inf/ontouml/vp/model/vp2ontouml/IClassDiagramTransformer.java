@@ -39,6 +39,7 @@ public class IClassDiagramTransformer {
     target.setOwner(owner);
 
     Arrays.stream(source.toDiagramElementArray())
+        .filter(e -> e.getModelElement() != null)
         .map(e -> transfromIDiagramElement(e))
         .forEach(e -> target.addElement(e));
 

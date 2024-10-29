@@ -13,6 +13,7 @@ import com.vp.plugin.model.factory.IModelElementFactory;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 /**
@@ -467,5 +468,19 @@ public class Property implements ModelElement {
     Stream.of(subsettedProperties)
         .filter(prop -> prop instanceof IAssociationEnd || prop instanceof IAttribute)
         .forEach(prop -> associationEnd.addSubsettedProperty((IAssociationEnd) prop));
+  }
+
+  public static boolean isWholeEnd(IAssociationEnd associationEnd) {
+    String aggregationKind =
+        Optional.ofNullable(associationEnd.getAggregationKind())
+            .map(String::toLowerCase)
+            .orElse("");
+
+    return IAssociationEnd.AGGREGATION_KIND_shared.equals(aggregationKind)
+        || IAssociationEnd.AGGREGATION_KIND_composite.equals(aggregationKind);
+  }
+
+  public static boolean isNavigableEnd(IAssociationEnd associationEnd) {
+    return IAssociationEnd.NAVIGABLE_NAVIGABLE == associationEnd.getNavigable();
   }
 }
